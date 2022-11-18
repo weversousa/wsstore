@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app import config, database, cli, api
+from app import config, database, cli, cors, api
 
 
 def create_app():
@@ -8,5 +8,6 @@ def create_app():
     config.init_app(app)
     database.init_app(app)
     cli.init_app(app)
+    cors.init_app(app)
     api.init_app(app)
     return app
