@@ -19,7 +19,25 @@ services:
       - POSTGRES_PASSWORD=1234
     volumes:
       - v-database:/var/lib/postgresql/data
-      - ./scripts:/scripts
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./script:/script
+      - ./script/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
+
+  s-backend:
+  depends_on:
+    - s-database
+  container_name: c-backend
+  image: python:3.11.0-alpine3.16
+  networks:
+    - n-database
+  environment:
+    - SECRET_KEY=df1e2ed064189acdcd83cb5ddf230580c0efdff7f2974a13cd16e1c8c9dd
+    - DATABASE_URL=postgresql+psycopg2://wsstore:1234@s-database:5432/wsstore
+  entrypoint: sh
+  working_dir: /backend
+  volumes:
+    - ./backend/:/backend
+  ports:
+    - 5000:5000
+  command: ./app.sh
