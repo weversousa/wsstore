@@ -1,0 +1,25 @@
+version: '3.7'
+
+networks:
+  n-database:
+    driver: bridge
+
+volumes:
+  v-database:
+
+services:
+  s-database:
+    container_name: c-database
+    image: postgres:15.1-alpine3.16
+    networks:
+      - n-database
+    environment:
+      - POSTGRES_USER=wsstore
+      - POSTGRES_DB=wsstore
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - v-database:/var/lib/postgresql/data
+      - ./scripts:/scripts
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
